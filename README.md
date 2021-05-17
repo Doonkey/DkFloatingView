@@ -1,4 +1,4 @@
-# 应用内悬浮窗
+# 应用内悬浮窗[![](https://jitpack.io/v/Doonkey/DkFloatingView.svg)](https://jitpack.io/#Doonkey/DkFloatingView)
 
 应用内悬浮窗，基本无侵入性，无权限申请，简单配置，全局可用，支持滑动，点击事件
 
@@ -10,6 +10,21 @@
 ![](preview/1.png)
 
 ### 使用说明
+
+#### 导入依赖
+ Step 1. 添加JitPack仓库到根目录build.gradle文件
+ 
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+Step 2. 在module添加依赖
+
+	dependencies {
+	        implementation 'com.github.Doonkey:DkFloatingView:1.0'
+	}
 
 #### 初始化
 
