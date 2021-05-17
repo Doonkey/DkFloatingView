@@ -3,6 +3,7 @@ package com.dk.floatingview;
 import android.app.Activity;
 import android.app.Application;
 import android.support.v4.view.ViewCompat;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -34,6 +35,11 @@ public class FloatingView implements IFloatingView, FloatLifecycle.Callback {
     public void hide(){
         isShow = false;
         detach(getContainer());
+    }
+
+    @Override
+    public View getView() {
+        return dkFloatingView.getView();
     }
 
     @Override
