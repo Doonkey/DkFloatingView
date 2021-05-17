@@ -20,10 +20,10 @@
 			maven { url 'https://jitpack.io' }
 		}
 	}
-Step 2. 在module添加依赖
+Step 2. 在module添加依赖,${version}版本[![](https://jitpack.io/v/Doonkey/DkFloatingView.svg)](https://jitpack.io/#Doonkey/DkFloatingView)
 
 	dependencies {
-	        implementation 'com.github.Doonkey:DkFloatingView:1.0'
+	        implementation 'com.github.Doonkey:DkFloatingView:${version}'
 	}
 
 #### 初始化
