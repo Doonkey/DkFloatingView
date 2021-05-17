@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
+        android:id="@+id/rl_control"
+        android:layout_width="140dp"
+        android:layout_height="50dp"
+        android:background="@drawable/btn_round_player_bg"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <ImageView
+            android:id="@+id/iv_player_status"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/player_status_pause_white"/>
+        <ImageView
+            android:id="@+id/iv_player_close"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:src="@mipmap/close_white"/>
+    </RelativeLayout>
+    <ImageView
+        android:id="@+id/iv_player_cover"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@mipmap/ic_launcher_round"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>
