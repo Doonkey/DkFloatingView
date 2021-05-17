@@ -10,8 +10,10 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        FloatWindow.with(this)
-                .setLayoutId(R.layout.float_music)
+        FloatWindow.with(this)//application上下文
+                .setLayoutId(R.layout.float_music)//悬浮布局
+                //.setFilter(Test1_1Activity.class)//过滤activity
+                //.setLayoutParam()//设置悬浮布局layoutParam
                 .build();
         FloatWindow.get().setOnClickListener(new DkFloatingView.ViewClickListener() {
             @Override
