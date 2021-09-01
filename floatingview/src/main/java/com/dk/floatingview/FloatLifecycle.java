@@ -24,26 +24,24 @@ public class FloatLifecycle implements Application.ActivityLifecycleCallbacks {
 
     @Override
     public void onActivityStarted(Activity activity) {
+    }
+
+    @Override
+    public void onActivityResumed(Activity activity) {
         if (mCallback != null){
             mCallback.activityAttach(activity);
         }
     }
 
     @Override
-    public void onActivityResumed(Activity activity) {
-
-    }
-
-    @Override
     public void onActivityPaused(Activity activity) {
-
+        if (mCallback != null){
+            mCallback.activityDetach(activity);
+        }
     }
 
     @Override
     public void onActivityStopped(Activity activity) {
-        if (mCallback != null){
-            mCallback.activityDetach(activity);
-        }
     }
 
     @Override
