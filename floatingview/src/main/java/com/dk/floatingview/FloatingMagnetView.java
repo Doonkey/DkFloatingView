@@ -1,12 +1,12 @@
 package com.dk.floatingview;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -25,18 +25,12 @@ public class FloatingMagnetView extends FrameLayout {
     private float mOriginalRawY;
     private float mOriginalX;
     private float mOriginalY;
-    private MagnetViewListener mMagnetViewListener;
-    private static final int TOUCH_TIME_THRESHOLD = 150;
-    private long mLastTouchDownTime;
     protected MoveAnimator mMoveAnimator;
     protected int mScreenWidth;
     private int mScreenHeight;
     private boolean isNearestLeft = true;
     private float mPortraitY;
-
-    public void setMagnetViewListener(MagnetViewListener magnetViewListener) {
-        this.mMagnetViewListener = magnetViewListener;
-    }
+    private int scaledTouchSlop;
 
     public FloatingMagnetView(Context context) {
         this(context, null);
@@ -52,45 +46,40 @@ public class FloatingMagnetView extends FrameLayout {
     }
 
     private void init() {
+        scaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
         mMoveAnimator = new MoveAnimator();
         setClickable(true);
 //        updateSize();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    private float rawX;
+    private float rawY;
+    private boolean intercept;
+
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event == null) {
-            return false;
-        }
+    public boolean onInterceptTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                intercept = false;
+                rawX = event.getRawX();
+                rawY = event.getRawY();
                 changeOriginalTouchParams(event);
                 updateSize();
                 mMoveAnimator.stop();
                 break;
             case MotionEvent.ACTION_MOVE:
+                if (Math.abs(event.getRawX() - rawX) >= scaledTouchSlop ||
+                        Math.abs(event.getRawY() - rawY) >= scaledTouchSlop) {
+                    intercept = true;
+                }
                 updateViewPosition(event);
                 break;
             case MotionEvent.ACTION_UP:
                 clearPortraitY();
                 moveToEdge();
-                if (isOnClickEvent()) {
-                    dealClickEvent(event);
-                }
-                break;
+                return super.onInterceptTouchEvent(event) || intercept;
         }
-        return true;
-    }
-
-    protected void dealClickEvent(MotionEvent event) {
-        if (mMagnetViewListener != null) {
-            mMagnetViewListener.onClick(event);
-        }
-    }
-
-    protected boolean isOnClickEvent() {
-        return System.currentTimeMillis() - mLastTouchDownTime < TOUCH_TIME_THRESHOLD;
+        return super.onInterceptTouchEvent(event);
     }
 
     private void updateViewPosition(MotionEvent event) {
@@ -111,7 +100,6 @@ public class FloatingMagnetView extends FrameLayout {
         mOriginalY = getY();
         mOriginalRawX = event.getRawX();
         mOriginalRawY = event.getRawY();
-        mLastTouchDownTime = System.currentTimeMillis();
     }
 
     protected void updateSize() {
@@ -146,12 +134,6 @@ public class FloatingMagnetView extends FrameLayout {
         int middle = mScreenWidth / 2;
         isNearestLeft = getX() < middle;
         return isNearestLeft;
-    }
-
-    public void onRemove() {
-        if (mMagnetViewListener != null) {
-            mMagnetViewListener.onRemove(this);
-        }
     }
 
     protected class MoveAnimator implements Runnable {
@@ -198,12 +180,9 @@ public class FloatingMagnetView extends FrameLayout {
         if (getParent() != null) {
             final boolean isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
             markPortraitY(isLandscape);
-            ((ViewGroup) getParent()).post(new Runnable() {
-                @Override
-                public void run() {
-                    updateSize();
-                    moveToEdge(isNearestLeft, isLandscape);
-                }
+            ((ViewGroup) getParent()).post(() -> {
+                updateSize();
+                moveToEdge(isNearestLeft, isLandscape);
             });
         }
     }
